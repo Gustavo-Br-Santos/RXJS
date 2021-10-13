@@ -1,11 +1,17 @@
-// distinctUntilKeyChanged
+// distinctUntilChanged
 
-// Não emite quando a propriedade de um valor anterior for o mesmo, 
-//porém só faz uma comparação da propriedade do valor atual com a propriedade do valor anterior.
+// Não emite quando o valor anterior for o mesmo, porém só faz uma comparação do valor atual com o anterior.
 
+// distinct
+// Não emite novamente os valores que anteriormente já foram emitidos
+// Distinct compara valor e tipo ( === )
 
-import { from } from "rxjs";
-import { distinctUntilKeyChanged } from "rxjs/operators";
+import { from, of } from "rxjs";
+import { distinct, distinctUntilChanged, tap } from "rxjs/operators";
+
+const numeros$ = of(1, 1, 3, 3, 3,  2, 2, 4, 4, 5, 3, 1, 2, 7, 5, 7, 8)
+
+numeros$.pipe(distinctUntilChanged()).subscribe(console.log)
 
 interface Personagem {
     nome: string
@@ -38,6 +44,6 @@ from(personagens).subscribe(console.log);
 console.log('Com distinctUntilChanged: ')
 from(personagens)
 .pipe(
-    distinctUntilKeyChanged('nome') // Pega a propriedade do objeto
+    distinctUntilChanged((anterior, atual) => anterior.nome === atual.nome) // Pega os nomes dos personagens e irá fazer a comparação do último valor recebido com o atual
 )
 .subscribe(console.log);
